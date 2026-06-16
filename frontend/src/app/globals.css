@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --page-x: clamp(1.25rem, 5vw, 5rem);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-ink text-bone font-sans antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    @apply bg-accent text-ink;
+  }
+
+  /* Custom thin scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #1a181a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #363636;
+    border-radius: 999px;
+  }
+}
+
+@layer components {
+  .container-editorial {
+    @apply mx-auto w-full max-w-editorial;
+    padding-left: var(--page-x);
+    padding-right: var(--page-x);
+  }
+
+  .label-mono {
+    @apply font-mono text-xs uppercase tracking-label text-bone-muted;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium
+           transition-all duration-300 ease-editorial;
+  }
+  .btn-primary {
+    @apply btn bg-bone text-ink hover:bg-accent hover:text-ink;
+  }
+  .btn-outline {
+    @apply btn border border-line text-bone hover:border-bone hover:bg-bone hover:text-ink;
+  }
+
+  .hairline {
+    @apply h-px w-full bg-line;
+  }
+
+  .link-underline {
+    @apply relative inline-block text-bone transition-colors hover:text-accent;
+  }
+}
+
+/* Rich text (article body + tiptap editor output) */
+.prose-editorial {
+  @apply text-bone-dim leading-relaxed;
+}
+.prose-editorial h1,
+.prose-editorial h2,
+.prose-editorial h3 {
+  @apply font-display text-bone mt-10 mb-4 leading-tight;
+}
+.prose-editorial h1 { @apply text-4xl; }
+.prose-editorial h2 { @apply text-3xl; }
+.prose-editorial h3 { @apply text-2xl; }
+.prose-editorial p { @apply my-5 text-lg; }
+.prose-editorial a { @apply text-accent underline underline-offset-4; }
+.prose-editorial ul { @apply my-5 list-disc pl-6 space-y-2; }
+.prose-editorial ol { @apply my-5 list-decimal pl-6 space-y-2; }
+.prose-editorial blockquote {
+  @apply my-6 border-l-2 border-accent pl-5 italic text-bone;
+}
+.prose-editorial img { @apply my-6 w-full rounded-xl; }
+.prose-editorial code {
+  @apply font-mono text-sm bg-ink-soft px-1.5 py-0.5 rounded;
+}
+
+/* tiptap placeholder */
+.ProseMirror:focus { outline: none; }
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply text-bone-faint;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

@@ -1,0 +1,10 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Keep only tracked files from each sub-project
+# (they each have their own .gitignore)

@@ -13,7 +13,7 @@ import type {
 } from "./types";
 
 export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+  (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
 
 const TOKEN_KEY = "portfolio_admin_token";
 
@@ -64,7 +64,10 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
 
   const res = await fetch(`${API_URL}${path}`, {
     ...rest,
-    headers: finalHeaders,
+    headers: {
+      ...finalHeaders,
+      "ngrok-skip-browser-warning": "true",
+    },
     body: payload,
     cache: rest.cache ?? "no-store",
   });
@@ -114,7 +117,10 @@ export const api = {
     form.set("password", password);
     const res = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "ngrok-skip-browser-warning": "true",
+      },
       body: form,
     });
     if (!res.ok) throw new ApiError("Invalid credentials", res.status);

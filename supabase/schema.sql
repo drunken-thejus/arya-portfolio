@@ -128,8 +128,17 @@ create table if not exists social_links (
 
 -- ===  PATCH EXISTING COLUMNS  ===================================
 
+alter table hero          alter column name         set default '';
+alter table hero          alter column headline      set default '';
+alter table hero          alter column intro         set default '';
 alter table hero          alter column created_at   set default now();
 alter table hero          alter column updated_at   set default now();
+alter table about         alter column biography          set default '';
+alter table about         alter column philosophy         set default '';
+alter table about         alter column experience_summary set default '';
+alter table about         alter column years_experience   set default 0;
+alter table about         alter column articles_published set default 0;
+alter table about         alter column clients_count      set default 0;
 alter table about         alter column created_at   set default now();
 alter table about         alter column updated_at   set default now();
 alter table services      alter column created_at   set default now();

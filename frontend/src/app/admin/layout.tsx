@@ -3,10 +3,10 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { api, getToken } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 import Sidebar from "@/components/admin/Sidebar";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
   const router = useRouter();
   const isLogin = pathname === "/admin/login";
@@ -16,21 +16,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (isLogin) return;
-    if (!getToken()) {
-      router.replace("/admin/login");
-      setState("anon");
-      return;
-    }
-    api
-      .me()
-      .then((u) => {
-        setEmail(u.email);
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setEmail(session.user.email ?? "");
         setState("authed");
-      })
-      .catch(() => {
+      } else {
         router.replace("/admin/login");
         setState("anon");
-      });
+      }
+    });
+
+    // Listen for auth state changes (logout, token expiry)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT" || !session) {
+        router.replace("/admin/login");
+        setState("anon");
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [isLogin, router, pathname]);
 
   if (isLogin) return <>{children}</>;
@@ -45,7 +50,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex min-h-screen bg-ink">
-      <Sidebar email={email} />
+      <Sidebar email={email} onLogout={async () => {
+        await supabase.auth.signOut();
+        router.replace("/admin/login");
+      }} />
       <main className="flex-1 overflow-x-hidden">
         <div className="mx-auto max-w-5xl px-8 py-10">{children}</div>
       </main>

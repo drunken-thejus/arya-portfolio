@@ -10,6 +10,7 @@ import Footer from "@/components/site/Footer";
 import { Reveal } from "@/components/motion/Reveal";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export async function generateMetadata({
   params,

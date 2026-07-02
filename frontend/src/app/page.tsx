@@ -11,6 +11,7 @@ import Contact from "@/components/sections/Contact";
 import { getSiteData } from "@/lib/server-data";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export default async function HomePage() {
   const data = await getSiteData();

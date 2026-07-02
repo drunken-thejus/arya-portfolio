@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
-import { clearToken } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -18,14 +17,14 @@ const nav = [
   { label: "Messages", href: "/admin/messages" },
 ];
 
-export default function Sidebar({ email }: { email?: string }) {
+export default function Sidebar({
+  email,
+  onLogout,
+}: Readonly<{
+  email?: string;
+  onLogout?: () => void | Promise<void>;
+}>) {
   const pathname = usePathname();
-  const router = useRouter();
-
-  const logout = () => {
-    clearToken();
-    router.push("/admin/login");
-  };
 
   return (
     <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-line bg-ink-soft">
@@ -60,7 +59,7 @@ export default function Sidebar({ email }: { email?: string }) {
       <div className="border-t border-line px-4 py-4">
         {email && <p className="mb-2 truncate px-2 text-xs text-bone-muted">{email}</p>}
         <button
-          onClick={logout}
+          onClick={onLogout}
           className="w-full rounded-lg px-3 py-2 text-left text-sm text-bone-dim transition-colors hover:bg-ink hover:text-bone"
         >
           Sign out

@@ -225,7 +225,7 @@ export const api = {
         .order("created_at", { ascending: false })
     ),
 
-  createWork: async (data: Partial<Work> & { images?: { url: string; caption?: string; order?: number }[] }) => {
+  createWork: async (data: Partial<Work> & { images?: { url: string; caption?: string | null; order?: number }[] }) => {
     const { images, ...rest } = data;
     const slug = slugify(rest.title ?? "untitled");
     const { data: work, error } = await supabase
@@ -242,7 +242,7 @@ export const api = {
     return work as Work;
   },
 
-  updateWork: async (id: number, data: Partial<Work> & { images?: { url: string; caption?: string; order?: number }[] }) => {
+  updateWork: async (id: number, data: Partial<Work> & { images?: { url: string; caption?: string | null; order?: number }[] }) => {
     const { images, ...rest } = data;
     if (rest.title) rest.slug = slugify(rest.title);
     const { data: work, error } = await supabase
